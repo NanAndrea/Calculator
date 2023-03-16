@@ -5,43 +5,60 @@ import './App.css'
 function App() {
 
 
- const [number, setNumber] = useState(0);
- const [operator, setOperator] = useState();
+ const [number, setNumber] = useState("");
  
-
+ 
+ 
  function handleDisplayNumber(event){
-  
-  setNumber(event.target.value);
+  let nrInput=event.target.value;
 
-  if(number === 0){
-    setNumber(event.target.value);
+  if(number === "0" || number === "." || number ==="+" || number === "*"){
+    setNumber( nrInput);
   } else {
-    setNumber(number+event.target.value);
+    setNumber(number + nrInput);
   }
-  
+
+
  }
 
- 
 
 
  function handleDisplayOperator(event){
-  let operatorInput = event.target.value;
-  setOperator(operatorInput);  
+  const operatorInput = event.target.value;
+
+  let newOperand;
+  if(number.slice(-1) === "0"){
+    setNumber(number + operatorInput);
+  } else {
+    if(!Number(number.slice(-1))) {
+      newOperand = number.slice(0,-1);
+      setNumber(newOperand + operatorInput);
+    } else {
+      setNumber(number + operatorInput);
+    }
+
+    
+  }   
+}
+
+
+ function calculate(){
+    setNumber(eval(number).toString());  
+    
  }
- 
 
 
  function handleAllClear(){
-  setOperator();
-  setNumber(0);
+    setNumber("");
+      
  }
-
  
+
  
   return (
     <div className="App">
       
-      <input type="text" value={[number,operator].join("")} onChange={handleDisplayOperator} readOnly/>
+      <input type="text" value={number} placeholder={0} readOnly/>
       
         <div className="calculator-keys">
           <button value="+" onClick={handleDisplayOperator} >+</button>
@@ -65,7 +82,7 @@ function App() {
           <button value="." onClick={handleDisplayOperator} >.</button>
           <button value="all-clear" onClick={handleAllClear}>AC</button>
 
-          <button className="equal-sign" value="=" >=</button>
+          <button className="equal-sign" value="=" onClick={calculate} >=</button>
         </div>
 
 
